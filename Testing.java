@@ -15,7 +15,7 @@ public class Testing {
 /*******************************************************************************************************
         //This section of code is to illustrate the process of calling multiple constructors
             that are directly related through Inheritance. Likewise show what happens in the background
-            for each specific case
+            for each specific case relative to the order in which they are called
  ***************************************************************************************/
         System.out.println("Next line in main, GrandParent gp = new Child()");
         GrandParent gp = new Child();
@@ -55,7 +55,7 @@ public class Testing {
         cd.tryme1();
         cd.tryme2();
         System.out.println();
-
+        //     try/catch/finally used for handeling exceptions
         try {
             // gp has a reference of the Grandparent class but points to a object of the Child class
             System.out.println("Next line in main is: answer = gp.divide(x, y); ");
@@ -84,7 +84,11 @@ public class Testing {
 
         System.out.println();
         System.out.println("Your answer is "+ answer);
+        //The info determined are determined by refernce type and not object type
+        // thus gp.x will give the info stored in grandparent class instead of child class even though
+        // the atual object is of a Child Class. It was defined by GrandParent gp = new Child()
         System.out.println("gp x is "+gp.x +" gp y is "+gp.y);
+        // cd is a reference of type Child so it will print info stored in Child Class
         System.out.println("cd x is "+cd.x +" cd y is "+cd.y);
 
     }
