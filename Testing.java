@@ -1,12 +1,17 @@
 /**
- * Related topics described by this class
+ * Related topics described by this file of classes
+ * Inheritance/Encapsulation/
+ * Showing inherited variables though a hierarchy of multiple classes
+ * Which one is used when a parent class extends another class both having the same variable
+ * How to use casting to access specific variables of a Grandparent/Parent class
+ * How visibility modifiers can restrict what is inherited by a subclass
  *Calling of Instance and Static methods using a specific object type with various reference types
  * How does this relate to constructors being called as well as the order in which they are called
  * How does this effect which method will be called when overriding parent class methods
- * How does this effect calling methods that are not overriden but unique to a certain class
+ * How does this effect calling methods that are not overridden but unique to a certain class
  * How does this relate to declarations of throwing specific exceptions
- * How does inheritance work with the type of exceptions being thrown relative to a class hierchy
- * (not yet implemented) How must declarations of exceptions being thrown be defined in constuctors within a hiearchy?*/
+ * How does inheritance work with the type of exceptions being thrown relative to a class hierarchy
+ * (not yet implemented) How must declarations of exceptions being thrown be defined in constructors within a hierarchy?*/
 import java.util.Scanner;
 
 public class Testing {
@@ -81,7 +86,18 @@ public class Testing {
             // called from the 3 classes
             System.out.println("You have done something bad, i mean real bad...");
         }
-
+        //The following is allowed because the child class inherits grandparents gpvar even though it is not implemented
+        //in the child class
+        System.out.println("cd calling gp var "+ cd.gpVar);
+        //This illustrates that it will use Parent value for combo, being the next in line in the hiarchy
+        System.out.println("accessing combo using child reference " + cd.combo1);
+        //This next line is commented out because it will not compile with it uncommented
+        // You can not access the combo2 var because it is set to private and it shadows the parent var combo2
+        //and thus hides it. A subclass does not inherit private variables or methods
+        //System.out.println("Trying to access combo2 using Child class reference"+ cd.combo2);
+        //This next line does a cast changing the reference from the Child type to Grandparent type
+        //This thus ignores the Parent combo2 shadowing the grandparent combo2
+        System.out.println("Using Child refrence and casting Grandparent to access combo2 "+ ((GrandParent)cd).combo2);
         System.out.println();
         System.out.println("Your answer is "+ answer);
         //The info determined are determined by refernce type and not object type
@@ -98,17 +114,30 @@ public class Testing {
 
 //A class that represents the object of a GrandParent
 class GrandParent{
-    int x = 4;
-    static  int y = 4;
-
-   //Constructor for the GrandParent Class
-    //Notice that no public visibility modifier is used
-    // If no visibility modifier is used then the default visibility is given
-    // which gives access to all classes within the same package
     GrandParent(){
         //Just a notification to show the constructor is being called
         System.out.println(" Calling GrandParent Constructor");
     }
+    GrandParent(int x){
+        this.x = x;
+        //notice that constructor will never be used to initiate an instance of one of the subclasses since they
+        // do not explicitly call it with super(int x).. The compiler automatically assumes a no arg constructor and calls
+        //super() in all the subclasses as the first line.. Since this constructor has been created the no arg constructor above
+        //must be made by programer so that when the compiler assumes a no arg constructor there will be one to call
+        // You could also specify in the sub class the constructor you wanted to call, that has been created in the parent
+        //class and thus there is no need for compiler to call super()..
+        //THus If you comment out the no arg constructor above this file will not compile
+    }
+    int x = 4;
+    static  int y = 4;
+    String gpVar = "gpVar";
+    String combo1 = "gpCombo1";
+    String combo2 = "gpCombo2";
+   //Constructor for the GrandParent Class
+    //Notice that no public visibility modifier is used
+    // If no visibility modifier is used then the default visibility is given
+    // which gives access to all classes within the same package
+
 
     int divide(int x, int y)throws Exception
     {
@@ -128,7 +157,9 @@ class GrandParent{
 class Parent extends GrandParent{
     int x = 1;
     static  int y = 1;
-
+    String parentVar = "pVar";
+    String combo1 = "Parent combo1";
+    private String combo2 = "private Parent combo";// Encapsulation
     //Constructor for the Parent class
     Parent(){
         System.out.println(" Calling Parent Constructor");
@@ -155,6 +186,12 @@ class Child extends Parent{
 
     // Constructor for the Child Class
     Child(){
+        super();//not acctually needed because if you dont define which constructor of parent class to use it will
+        // call the no args constructor automatically super()
+        //If you hava a constructor with args then a default no args constructor wont be made and the automatic call
+        //will not work and thus the program will not compile unless you specify a call to constructor with correct args..
+        //The point is for an instance of a subclass to be created at least one constructor of all its parent classes must be called
+        // and initiated as well.. This is just automatically done when only no arg constructors are used...
         System.out.println(" Calling Child Constructor");
     }
 
