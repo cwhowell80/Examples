@@ -15,12 +15,12 @@
 import java.util.Scanner;
 
 public class Testing {
-    public static void main(String[] args){
+    public static void main(String[] args) {
 
 /*******************************************************************************************************
-        //This section of code is to illustrate the process of calling multiple constructors
-            that are directly related through Inheritance. Likewise show what happens in the background
-            for each specific case relative to the order in which they are called
+ //This section of code is to illustrate the process of calling multiple constructors
+ that are directly related through Inheritance. Likewise show what happens in the background
+ for each specific case relative to the order in which they are called
  ***************************************************************************************/
         System.out.println("Next line in main, GrandParent gp = new Child()");
         GrandParent gp = new Child();
@@ -39,8 +39,8 @@ public class Testing {
         System.out.println();
 /*******************************************************************************************************/
         Scanner input = new Scanner(System.in);
-        int x =0,y=0;
-        int answer = 0,answer2 =0;
+        int x = 0, y = 0;
+        int answer = 0, answer2 = 0;
         System.out.println("give me and int ");
         x = input.nextInt();
         System.out.println("give me and int ");
@@ -59,36 +59,34 @@ public class Testing {
         //where tryme1 and tryme2 are defined
         cd.tryme1();
         cd.tryme2();
+
         System.out.println();
         //     try/catch/finally used for handeling exceptions
         try {
             // gp has a reference of the Grandparent class but points to a object of the Child class
             System.out.println("Next line in main is: answer = gp.divide(x, y); ");
             answer = gp.divide(x, y);// these are allowed unlike tryme because they are methods that exist in
-                                    //GrandParent but have been overridden by the child class
+            //GrandParent but have been overridden by the child class
             // divide method is non-static and thus an instance method
-        }
-        catch(Exception e){//This works because Exception is the Grandparent of the other two exception types
-                           //and thus cast a wide enough net to catch them all
+        } catch (Exception e) {//This works because Exception is the Grandparent of the other two exception types
+            //and thus cast a wide enough net to catch them all
             System.out.println("You have done something bad...");
-        }
-        finally{  //finally gets called reguardless if exception is called or not
-                  // try/catch block must have a catch or finally block and can have both
+        } finally {  //finally gets called reguardless if exception is called or not
+            // try/catch block must have a catch or finally block and can have both
             System.out.println("finally");
         }
         try {
-           //divide2 method is static
+            //divide2 method is static
             System.out.println("Next line in main is: answer = gp.divide2(x, y); ");
             answer2 = gp.divide2(x, y);
-        }
-        catch(Exception e){//This works because Exception is the Grandparent of the other two exception types
+        } catch (Exception e) {//This works because Exception is the Grandparent of the other two exception types
             // and thus cast a wide enough net to catch them all erguardless of which method is
             // called from the 3 classes
             System.out.println("You have done something bad, i mean real bad...");
         }
         //The following is allowed because the child class inherits grandparents gpvar even though it is not implemented
         //in the child class
-        System.out.println("cd calling gp var "+ cd.gpVar);
+        System.out.println("cd calling gp var " + cd.gpVar);
         //This illustrates that it will use Parent value for combo, being the next in line in the hiarchy
         System.out.println("accessing combo using child reference " + cd.combo1);
         //This next line is commented out because it will not compile with it uncommented
@@ -97,21 +95,55 @@ public class Testing {
         //System.out.println("Trying to access combo2 using Child class reference"+ cd.combo2);
         //This next line does a cast changing the reference from the Child type to Grandparent type
         //This thus ignores the Parent combo2 shadowing the grandparent combo2
-        System.out.println("Using Child refrence and casting Grandparent to access combo2 "+ ((GrandParent)cd).combo2);
+        System.out.println("Using Child refrence and casting Grandparent to access combo2 " + ((GrandParent) cd).combo2);
         System.out.println();
-        System.out.println("Your answer is "+ answer);
+        System.out.println("Your answer is " + answer);
         //The info determined are determined by refernce type and not object type
         // thus gp.x will give the info stored in grandparent class instead of child class even though
         // the atual object is of a Child Class. It was defined by GrandParent gp = new Child()
-        System.out.println("gp x is "+gp.x +" gp y is "+gp.y);
+        System.out.println("gp x is " + gp.x + " gp y is " + gp.y);
         // cd is a reference of type Child so it will print info stored in Child Class
-        System.out.println("cd x is "+cd.x +" cd y is "+cd.y);
+        System.out.println("cd x is " + cd.x + " cd y is " + cd.y);
+        //These next two lines show two subtle features of system.out.println as well as how strings are defined and
+        //stored. The system.out.println invokes a toString method in the background
+        //likewise because the string class overrides The Objects class toString() method and these methods are not static
+        //then the String class method is used. THe Object class to string would result in
+        //getClass().getName() + '@' + Integer.toHexString(hashCode()
+        Object s = new String("I am a string");
+        System.out.println(s);
+        method(gp);
+        System.out.println("gp x is " + gp.x + " gp y is " + gp.y);
+        System.out.println("gp x is " + ((Parent)gp).x + " gp y is " + gp.y);
+        GrandParent gp2 = new GrandParent();
+
+        /*This next section is commented out so that a runtime error will not occur. Since gp2 is a reference of type
+        GrandParent and points to a Grandparent object only the grandparent class has been initiated...The GrandParent has
+        no Parent of child class associated with it. Thus trying to cast grandparent to parent will fail. The program will
+        compile and run fine until it gets to invoking that method and will have a critical error and shut down due to a
+        CLassCastException... One could handle this exception by indicating in the throws clause of the method and use
+        a try catch block where the method is invoked
+         */
+
+        //method(gp2);
+        System.out.println("gp2 x is " + gp2.x + " gp y is " + gp.y);
+        //System.out.println("gp2 parent x is " + ((Parent)gp2).x + " gp y is " + gp.y);
 
     }
 
+
+    public static void method(GrandParent gp) {
+        //This Method shows that objects are indeed passed by value although slightly confusing
+        //The gp here is a local value that is an address to the same object as the reference that was put in the parameters
+        // when invoking the method. It is thus a copy of the remote control to that object
+        //Thus you can make changes to the object and it will acctually change the object
+        //however if you set gp = null it does not nullify the object but instead changes what this local reference points to.
+        gp.x = 24;
+        ((Parent) gp).x = 34;
+        ((Child) gp).x = 44;
+        gp=null;
+    }
+
 }
-
-
 //A class that represents the object of a GrandParent
 class GrandParent{
     GrandParent(){
